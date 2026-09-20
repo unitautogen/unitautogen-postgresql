@@ -6,7 +6,7 @@ This page shows the workflow with Supabase and an AI editor. It is editor-agnost
 
 ## Where the code comes from
 
-A typical Supabase project is built in an AI-first editor, for example Cursor, or VS Code with GitHub Copilot, or Windsurf. You describe what you want, the assistant writes or edits SQL, and the change lands as a migration under `supabase/migrations/`. That migration, the function, trigger, or policy it defines, is exactly what UnitAutogen guards.
+Supabase provides an [MCP server](https://supabase.com/docs/guides/ai-tools/mcp) so AI editors can work directly against your Supabase project, and documents it for the editors it supports: Cursor, VS Code with GitHub Copilot, Windsurf, Claude, and Cline. In any of them you describe what you want, the assistant proposes SQL, you approve it, and the change lands as a migration under `supabase/migrations/`. That migration, the function, trigger, or policy it defines, is exactly what UnitAutogen guards, and it is the automated check that the change you approved did not quietly alter behaviour elsewhere.
 
 ## One-time setup
 
