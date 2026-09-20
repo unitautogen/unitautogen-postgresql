@@ -2,7 +2,7 @@
 
 All notable changes to UnitAutogen for PostgreSQL are recorded here. Versions follow the product's release tags.
 
-## 0.3.1-beta
+## 0.3.2-beta
 
 First public beta of the PostgreSQL edition.
 

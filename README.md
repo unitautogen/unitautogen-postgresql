@@ -3,7 +3,7 @@
 > Your application is tested. The logic inside your database usually is not.
 > UnitAutogen writes the tests for it.
 
-**Beta (v0.3.1)** · PostgreSQL 14-18 · Windows and Linux · Community Edition (free), with Team and Enterprise modules on top.
+**Beta (v0.3.2)** · PostgreSQL 14-18 · Windows and Linux · Community Edition (free), with Team and Enterprise modules on top.
 
 Your application has a test suite. The functions, procedures and triggers running *inside* your PostgreSQL database almost certainly do not, and it is not because your team is lazy. Testing database logic by hand means crafting seed data that forces each `IF`, `CASE`, `EXISTS` and exception path to run, one branch at a time. It is tedious enough that it rarely gets done, so the most critical logic you ship, the code closest to your data, goes out untested and breaks quietly: a wrong `WHERE`, a missing `INSERT`, a branch that never once executed.
 
@@ -126,7 +126,7 @@ UnitAutogen runs entirely on your side. There is no telemetry and no phone-home;
 
 ## Status
 
-Active beta (v0.3.1). The engine has been validated at high coverage across a range of real schemas, but you will surface things on production schemas nobody has run it against yet. Bug reports are the most valuable thing you can give us right now.
+Active beta (v0.3.2). The engine has been validated at high coverage across a range of real schemas, but you will surface things on production schemas nobody has run it against yet. Bug reports are the most valuable thing you can give us right now.
 
 ## Support
 
