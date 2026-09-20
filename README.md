@@ -11,21 +11,34 @@ UnitAutogen does that work for you. Point it at a database and it generates the 
 
 ![A UnitAutogen unit-test coverage report](docs/img/img01.png)
 
-That is the free starting point, and for most developers it is the whole reason to install it. From there the tool climbs: **integration** testing across your function call map, and **seccover**, a full security-coverage pass that checks whether your row-level security and multi-tenant isolation actually hold and whether personal data leaks through error messages. More on that below.
+## The guardrail for AI-written database code
+
+AI assistants now write a lot of database logic, and they write it fast. That is exactly where a silent mistake costs the most, and where it is hardest to catch by eye.
+
+Say you ask your AI editor to adjust the tiers in a `membership_tier` function. The edit reads fine, so you approve it, but it flipped one boundary:
+
+```diff
+-    ELSIF p_points >= 1000 THEN RETURN 'gold';
++    ELSIF p_points >  1000 THEN RETURN 'gold';
+```
+
+Now a customer with exactly 1000 points silently drops from gold to the tier below, the kind of thing no code review catches. But UnitAutogen already captured how that function behaved when it was correct, as standard pgTAP tests you committed, so the change fails one of them before it ships:
+
+```
+not ok 7 - membership_tier :: p_points = 1000
+    #   have: silver
+    #   want: gold
+```
+
+That is the guardrail. It pins today's behaviour as a test suite you did not have to write, so the next change, from an AI or a person, that moves that behaviour fails in CI instead of in production. Because the tests are generated, it keeps pace with code produced faster than anyone could test it by hand. Integration testing extends the same net across the whole flow, functions calling functions and the triggers their writes fire.
+
+See the full [worked example](docs/worked-example.md), or [how to set it up](docs/ai-guardrail.md) in a Supabase and AI-editor workflow.
+
+Unit testing is free and where most developers start. From there the tool climbs: **integration** testing across your functions, and **seccover**, a full security-coverage pass that checks whether your row-level security and multi-tenant isolation actually hold and whether personal data leaks through error messages. More on that below.
 
 ## The one guarantee
 
 UnitAutogen never gives you a fabricated, false-passing, or flaky test. If a branch cannot be tested reliably, the report tells you so, in plain language, rather than showing a green that would mislead you. So every report comes back with no failing and no false tests, and a visible, explained gap always beats a false pass. That is what makes the result safe to gate your CI on.
-
-## A guardrail for AI-written code
-
-AI coding assistants now write a lot of database logic, and they write it fast. That is exactly where a silent mistake costs the most: a wrong `WHERE`, a dropped `INSERT`, a policy loosened in one edit and forgotten, shipped before anyone hand-tested the branch that broke.
-
-UnitAutogen is the guardrail for that. It captures how your functions and triggers behave today and emits it as a suite of standard pgTAP tests, the kind you would otherwise write by hand, that you commit alongside your code. The next change that alters that behaviour, whoever or whatever made it, fails one of those tests instead of reaching production. Because the tests are generated, the guardrail keeps pace with code that is being produced faster than anyone could test it by hand.
-
-Integration testing widens the net to the whole flow, functions calling functions and the triggers their writes fire, which is where an AI-generated change most often has effects nobody predicted. Wire either into CI and every AI-authored change is checked by tests produced as fast as the code was, so you keep the speed without shipping broken database logic.
-
-See it catch a subtle AI change in the [worked example](docs/worked-example.md), and [how to wire it up as a guardrail](docs/ai-guardrail.md) in a Supabase and AI-editor workflow.
 
 ## Who it is for
 
