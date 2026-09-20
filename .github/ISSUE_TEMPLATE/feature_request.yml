@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest an improvement or a new capability.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that UnitAutogen does not handle well today?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposed solution or idea
+      description: How you imagine it working. Rough is fine.
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Example procedures, schemas, or workflows that would benefit.

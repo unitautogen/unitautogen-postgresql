@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/unitautogen/unitautogen-postgresql/tree/main/docs
+    about: Installation, prerequisites, commands, and the FAQ.
+  - name: Questions and general help
+    url: mailto:hello@unitautogen.com
+    about: Email us for usage or general questions.
+  - name: Team / Enterprise licensing
+    url: mailto:licensing@unitautogen.com
+    about: seccover, integration, PII auditing, and paid licensing.
+  - name: Security or vulnerability reports
+    url: mailto:security@unitautogen.com
+    about: Report privately. Please do not open a public issue for a vulnerability.
