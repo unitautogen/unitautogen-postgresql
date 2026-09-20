@@ -30,9 +30,9 @@ not ok 7 - membership_tier :: p_points = 1000
     #   want: gold
 ```
 
-That is the guardrail. It pins today's behaviour as a test suite you did not have to write, so the next change, from an AI or a person, that moves that behaviour fails in CI instead of in production. Because the tests are generated, it keeps pace with code produced faster than anyone could test it by hand. Integration testing extends the same net across the whole flow, functions calling functions and the triggers their writes fire.
+That is the guardrail. It pins today's behaviour as a test suite you did not have to write, so the next change, from an AI or a person, that moves that behaviour fails before it ships instead of in production. Because the tests are generated, it keeps pace with code produced faster than anyone could test it by hand. Integration testing extends the same net across the whole flow, functions calling functions and the triggers their writes fire.
 
-See the full [worked example](docs/worked-example.md), or [how to set it up](docs/ai-guardrail.md) in a Supabase and AI-editor workflow.
+Best of all, you can hand the whole loop to your AI assistant. Tell it once to use UnitAutogen as its guardrail, then just keep asking for features: it generates the tests, runs them on every change, and fixes what breaks before it ever shows you the code. See [how to set that up](docs/ai-guardrail.md), with the exact prompt and a real session, or the full [worked example](docs/worked-example.md).
 
 Unit testing is free and where most developers start. From there the tool climbs: **integration** testing across your functions, and **seccover**, a full security-coverage pass that checks whether your row-level security and multi-tenant isolation actually hold and whether personal data leaks through error messages. More on that below.
 
