@@ -25,6 +25,8 @@ UnitAutogen is the guardrail for that. It captures how your functions and trigge
 
 Integration testing widens the net to the whole flow, functions calling functions and the triggers their writes fire, which is where an AI-generated change most often has effects nobody predicted. Wire either into CI and every AI-authored change is checked by tests produced as fast as the code was, so you keep the speed without shipping broken database logic.
 
+See it catch a subtle AI change in the [worked example](docs/worked-example.md).
+
 ## Who it is for
 
 UnitAutogen serves the whole path from writing database code to signing off on it, and grows from a free developer tool into enterprise-grade assurance. What you can do, and who it is for:

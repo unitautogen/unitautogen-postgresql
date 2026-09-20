@@ -103,3 +103,23 @@ the generator records the routine's current behaviour as the expected value and 
 not pass cleanly. A failing test therefore never appears in a first run - it appears later, when your code
 changes in a way that alters behaviour a test had pinned. That is precisely what a regression test is for:
 the failure in §7.2 is the desired outcome of changing behaviour, not a defect in the tests.
+
+## 7.3 The same thing, guarding an AI change
+
+This is exactly how the tests guard AI-written code. Say you committed the generated `test_classify_amount.sql`, and later an AI assistant is asked to "tidy up the boundary checks". It makes a change that looks harmless:
+
+```
+-    ELSIF  p_amount < 100 THEN RETURN 'small';
++    ELSIF  p_amount <= 100 THEN RETURN 'small';
+```
+
+Nothing about it reads as wrong, and it is easy to approve on a quick review. But it moved a boundary: `classify_amount(100)` used to return `'large'` and now returns `'small'`. Because that behaviour was pinned by a test you did not have to write, CI catches it:
+
+```
+not ok 9 - test_classify_amount.test_09_branch_elsif_p_amount_100_false
+    # Failed test 9: "branch :: ELSIF p_amount < 100  =>  FALSE :: returns"
+    #         have: small
+    #         want: large
+```
+
+The pull request is blocked before the change reaches production. You did not write that test, and you did not have to spot the boundary yourself. That is the value for AI-authored and fast-moving code: every change is checked against how the code behaved before, at the speed the code is produced.
