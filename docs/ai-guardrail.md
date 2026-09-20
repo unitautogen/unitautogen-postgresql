@@ -8,6 +8,14 @@ This page shows the workflow with Supabase and an AI editor. It is editor-agnost
 
 Supabase provides an [MCP server](https://supabase.com/docs/guides/ai-tools/mcp) so AI editors can work directly against your Supabase project, and documents it for the editors it supports: Cursor, VS Code with GitHub Copilot, Windsurf, Claude, and Cline. In any of them you describe what you want, the assistant proposes SQL, you approve it, and the change lands as a migration under `supabase/migrations/`. That migration, the function, trigger, or policy it defines, is exactly what UnitAutogen guards, and it is the automated check that the change you approved did not quietly alter behaviour elsewhere.
 
+## What it looks like in practice
+
+You are building a Supabase app in Cursor. You ask it to add a function that works out a customer's membership tier from their points, and it writes `public.membership_tier(p_points int)` returning `bronze`, `silver`, or `gold`. You approve the migration, run UnitAutogen once, glance at the report (three tiers, all green), and commit the generated tests next to the migration.
+
+Two weeks later you ask Cursor to "add a platinum tier above 1000 points". It edits the function and opens a pull request. It reads fine. But in the edit it also nudged the gold boundary, so a customer with exactly 1000 points now lands in the wrong tier. That is not the kind of thing a quick review catches. Your CI does: the committed test that pinned the 1000-point case fails, showing the old value next to the new one, and the pull request is blocked before it reaches production.
+
+You did not write that test, and you did not have to remember the boundary. That is the guardrail. The rest of this page is how to set it up.
+
 ## One-time setup
 
 UnitAutogen needs a PostgreSQL that has your schema and both the pgTAP and plpgsql_check extensions. Point it at whichever database you can enable both on: your local Supabase database, a standard Postgres container in CI, or any dev database that mirrors your schema. The tests it produces are ordinary pgTAP, so they run anywhere pgTAP is installed.
