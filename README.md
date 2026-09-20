@@ -138,3 +138,7 @@ Active beta (v0.3.2). The engine has been validated at high coverage across a ra
 ## Related
 
 UnitAutogen also has a SQL Server edition (built on tSQLt): [unitautogen/unitautogen-public-repo](https://github.com/unitautogen/unitautogen-public-repo). One brand, two database platforms. Learn more at [unitautogen.com](https://unitautogen.com).
+
+---
+
+© 2026 Munaf Ibrahim Khatri. All rights reserved. UnitAutogen™ is a trademark of Munaf Ibrahim Khatri.

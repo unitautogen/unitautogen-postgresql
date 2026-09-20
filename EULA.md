@@ -1,7 +1,9 @@
 # UnitAutogen for PostgreSQL - Licence and Terms of Use
 
+Copyright © 2026 Munaf Ibrahim Khatri. All rights reserved.
+
 Applies to: UnitAutogen for PostgreSQL (the "Software"), all editions.
-Licensor: UnitAutogen ("we", "us"). Contact: licensing@unitautogen.com.
+Licensor: Munaf Ibrahim Khatri, operating as UnitAutogen ("we", "us"). Contact: licensing@unitautogen.com.
 
 By downloading, installing, or using the Software, you agree to these terms. If you do not agree, do not use the Software.
 
@@ -55,3 +57,7 @@ These terms apply for as long as you use the Software, and terminate automatical
 For the Community Edition, these terms are the entire agreement between you and us and supersede any prior understanding on that subject; paid editions are additionally governed by their own agreements. If any provision is held unenforceable, the remaining provisions stay in effect. Our failure to enforce a provision is not a waiver of it. These terms are governed by the laws of India, and the courts at Pune, Maharashtra, India have exclusive jurisdiction over any dispute, without regard to conflict-of-laws rules.
 
 Questions about licensing: licensing@unitautogen.com.
+
+---
+
+UnitAutogen™ is a trademark of Munaf Ibrahim Khatri.
