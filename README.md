@@ -25,7 +25,7 @@ UnitAutogen is the guardrail for that. It captures how your functions and trigge
 
 Integration testing widens the net to the whole flow, functions calling functions and the triggers their writes fire, which is where an AI-generated change most often has effects nobody predicted. Wire either into CI and every AI-authored change is checked by tests produced as fast as the code was, so you keep the speed without shipping broken database logic.
 
-See it catch a subtle AI change in the [worked example](docs/worked-example.md).
+See it catch a subtle AI change in the [worked example](docs/worked-example.md), and [how to wire it up as a guardrail](docs/ai-guardrail.md) in a Supabase and AI-editor workflow.
 
 ## Who it is for
 
@@ -110,6 +110,7 @@ Walkthrough with real output: [docs/quickstart.md](docs/quickstart.md).
 | [The four commands](docs/commands.md) | Unit, integration, seccover and PII, in full. |
 | [Reading the report](docs/reading-the-report.md) | How to read coverage and verdicts. |
 | [Worked example](docs/worked-example.md) | A passing test and a failing test, up close. |
+| [AI guardrail (Supabase)](docs/ai-guardrail.md) | Using it as a guardrail for AI-written code, step by step. |
 | [CI/CD integration](docs/ci-cd.md) | Wiring it into your pipeline. |
 | [Command quick-reference](docs/command-reference.md) | Every command and flag. |
 | [FAQ and troubleshooting](docs/faq.md) | Common questions and fixes. |
