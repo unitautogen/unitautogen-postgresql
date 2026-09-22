@@ -249,14 +249,14 @@ exception message is exactly what this catches.
 | Generates unit tests? | YES - the security-case pgTAP tests, plus a dedicated PII-in-error report. |
 | Command | `unitautogen seccover --pii --schema public --out sec_out --sec-html sec.html --sec-json sec.json` |
 | Key options | Same options as `seccover` (the PII audit is the security pass with the error-message audit switched on): `--schema` · `--out DIR` · `--sec-html` / `--sec-json` · `--sec-gate`. |
-| Report(s) | The security **HTML** / **JSON** reports, plus a dedicated **PII-in-error report** (`sec_tests/pii_audit/pii_report.html`) listing each leaking routine, where it leaks, and the kind of data detected. |
+| Report(s) | The security **HTML** / **JSON** reports, plus a dedicated **PII-in-error report** (`pii_tests/pii_report.html`) listing each leaking routine, where it leaks, and the kind of data detected. |
 | Folder | The `--out` folder (default `battery_tests/`). |
 
 ### The PII-in-error report
 
 Turning on `--pii` adds a dedicated *PII-in-error audit* to the security
 pass. Every routine's exception / `RAISE` path is exercised and its output is inspected for personal data. The findings are written to their own
-report at `<out>/sec_tests/pii_audit/pii_report.html` (with
+report at `<out>/pii_tests/pii_report.html` (with
 `pii_findings.json` alongside).
 
 ![screenshot](img/img07.png)
