@@ -4,6 +4,19 @@ Run `unitautogen <command> --help` for a command's full option list. Each sectio
 below states what the command does, its command line, the report it produces, the folder it writes to, and
 whether it generates unit tests.
 
+> **Supabase mode (every command).** All four commands accept `--supabase`. Run one from inside your Supabase project and unitautogen takes the local Supabase database (from `supabase status`) and writes the generated pgTAP into `supabase/tests/seccover/` - exactly where `supabase test db` looks - so there is no connection string or output path to set and the tests drop straight into your Supabase CI suite. It enables pgTAP once (a `000-setup-pgtap` hook) and a re-run replaces only its own generated files. Per command: unit -> `.../seccover/unit/`, integration -> `.../seccover/integration/`, seccover -> `.../seccover/security/`, pii -> `.../seccover/pii_tests/pii_findings.json` (a findings report, not pgTAP tests).
+
+```bash
+cd my-supabase-project
+
+unitautogen --supabase --schema public                                        # unit (free)
+unitautogen --supabase integration --schema public --license unitautogen.lic   # integration (Team)
+unitautogen --supabase seccover --schema public --license unitautogen.lic      # seccover (Enterprise)
+unitautogen --supabase pii --schema public --license unitautogen.lic           # pii (Enterprise) - writes a PII findings report, not tests
+
+supabase test db
+```
+
 ## 5.1 Unit tests for functions & triggers (the default command)
 
 The everyday command - and the default, so `unitautogen --schema public` runs it with
@@ -23,6 +36,7 @@ and asserting what the trigger did.
 | Key options | `--schema a,b` schemas · `--like pat` name filter · `--out DIR` where the test files go · `--html PATH` unified HTML report · `--json PATH` machine-readable summary · `--report` also emit every CI report format (see [§8](#cicd)) · `--no-coverage` generate + run only (faster) · `--include-extension` also test extension-owned routines. |
 | Report(s) | Unified **HTML** (per-routine test counts + branch%/stmt% + click-through annotated source), **JSON** summary (one entry per routine), and a per-run `_battery_summary.json`. |
 | Folder | `--out` directory (default `battery_tests/`): the function tests `test_<routine>.sql`, a `trigger_tests/` sub-folder, and `_battery_summary.json`. HTML/JSON go wherever you point them. |
+| Supabase mode | Add `--supabase` (run from inside your Supabase project) to write this command's tests into `supabase/tests/seccover/unit/` for `supabase test db` - zero config: the connection and the output path come from the project, not flags. see the Supabase mode note at the top of this page. |
 
 The JSON summary is a list with one object per routine. A representative entry:
 
@@ -130,6 +144,7 @@ identical to its unit test, so it is noted as such rather than duplicated.
 | Key options | `--schema a,b` · `--like pat` · `--out DIR` · `--html PATH` · `--json PATH` · `--report` all CI formats · `--no-coverage` · `--include-extension` · `--license PATH`. |
 | Report(s) | Unified **HTML** + **JSON**; a `_integration_skipped.json` listing standalone functions whose result matches their unit test. |
 | Folder | `--out` directory (default `integration_tests/`). |
+| Supabase mode | Add `--supabase` (run from inside your Supabase project) to write this command's tests into `supabase/tests/seccover/integration/` for `supabase test db` - zero config: the connection and the output path come from the project, not flags. see the Supabase mode note at the top of this page. |
 
 **Requires a Team license (or above).** Without a license the command
 reports `NOT LICENSED` and does not run integration testing.
@@ -194,6 +209,7 @@ report and a data-classification report.
 | Key options | `--schema a,b` · `--out DIR` · `--sec-html PATH` / `--sec-json PATH` report paths · `--sec-gate` exit code 4 if a leak is found (for release pipelines) · `--sec-emit DIR` write the security tests to files · `--license PATH`. |
 | Report(s) | Security **HTML** (`--sec-html`, default `<out>/sec_report.html`) and **JSON** (`--sec-json`); a data-classification `cls-report.html` + `cls_report.json` in the `--out` folder. |
 | Folder | The `--out` folder (default `battery_tests/`) holds the security tests, the security report, and the classification report. |
+| Supabase mode | `--supabase` - zero-config for a Supabase project: finds `supabase/config.toml`, connects to the local Supabase database reported by `supabase status`, defaults `--schema` to `public`, and writes the tests into `supabase/tests/seccover/` so `supabase test db` runs them. It also drops a first-ordered `000-setup-pgtap` hook that enables pgTAP. Re-running replaces only its own generated files and leaves your hand-written tests untouched. Set `UNITAUTOGEN_DSN` or the `PG*` variables to use a different database. |
 
 ```
 == security: DB-WIDE ownership map (20 RLS table(s) across all schemas, 3 identities) ==
@@ -251,6 +267,7 @@ exception message is exactly what this catches.
 | Key options | Same options as `seccover` (the PII audit is the security pass with the error-message audit switched on): `--schema` · `--out DIR` · `--sec-html` / `--sec-json` · `--sec-gate`. |
 | Report(s) | The security **HTML** / **JSON** reports, plus a dedicated **PII-in-error report** (`pii_tests/pii_report.html`) listing each leaking routine, where it leaks, and the kind of data detected. |
 | Folder | The `--out` folder (default `battery_tests/`). |
+| Supabase mode | Add `--supabase` (run from inside your Supabase project). The PII audit writes its findings report to `supabase/tests/seccover/pii_tests/pii_findings.json` - a report, not pgTAP tests; the seccover tests this command also generates run under `supabase test db`. See the Supabase mode note at the top of this page. |
 
 ### The PII-in-error report
 

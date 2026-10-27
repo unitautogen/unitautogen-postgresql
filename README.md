@@ -3,7 +3,7 @@
 > Your application is tested. The logic inside your database usually is not.
 > UnitAutogen writes the tests for it.
 
-**Beta (v0.3.2)** · PostgreSQL 14-18 · Windows and Linux · Community Edition (free), with Team and Enterprise modules on top.
+**Beta (v0.5.0)** · PostgreSQL 14-18 · Windows and Linux · Community Edition (free), with Team and Enterprise modules on top.
 
 Your application has a test suite. The functions, procedures and triggers running *inside* your PostgreSQL database almost certainly do not, and it is not because your team is lazy. Testing database logic by hand means crafting seed data that forces each `IF`, `CASE`, `EXISTS` and exception path to run, one branch at a time. It is tedious enough that it rarely gets done, so the most critical logic you ship, the code closest to your data, goes out untested and breaks quietly: a wrong `WHERE`, a missing `INSERT`, a branch that never once executed.
 
@@ -124,6 +124,7 @@ Walkthrough with real output: [docs/quickstart.md](docs/quickstart.md).
 | [Reading the report](docs/reading-the-report.md) | How to read coverage and verdicts. |
 | [Worked example](docs/worked-example.md) | A passing test and a failing test, up close. |
 | [AI guardrail (Supabase)](docs/ai-guardrail.md) | Using it as a guardrail for AI-written code, step by step. |
+| [The config file](docs/config-file.md) | Add or correct the PHI, personal-data and audit tables it detects. |
 | [CI/CD integration](docs/ci-cd.md) | Wiring it into your pipeline. |
 | [Command quick-reference](docs/command-reference.md) | Every command and flag. |
 | [FAQ and troubleshooting](docs/faq.md) | Common questions and fixes. |
@@ -142,7 +143,7 @@ UnitAutogen runs entirely on your side. There is no telemetry and no phone-home;
 
 ## Status
 
-Active beta (v0.3.2). The engine has been validated at high coverage across a range of real schemas, but you will surface things on production schemas nobody has run it against yet. Bug reports are the most valuable thing you can give us right now.
+Active beta (v0.5.0). The engine has been validated at high coverage across a range of real schemas, but you will surface things on production schemas nobody has run it against yet. Bug reports are the most valuable thing you can give us right now.
 
 ## Support
 

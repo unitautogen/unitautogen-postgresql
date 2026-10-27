@@ -29,6 +29,19 @@ Yes. The `test_<routine>.sql` files are ordinary pgTAP - commit them next to
 your code and run them in CI. When a routine's intended behaviour changes, re-generate (or accept the new
 recorded output) and commit the update.
 
+### The tool missed a PHI table or an audit table, or picked a wrong one.
+
+Declare it in the [config file](config-file.md), `unitautogen.toml` in the folder you run from. Reports mark
+every table and column taken from the file as *from config file*.
+
+### How do I send a debug log?
+
+Add `--debug` to the command and send the file it writes, `unitautogen-debug-<time>.log` in the folder you
+ran from (`<time>` is the start of the run, `YYYYMMDD-HHMMSS`), or name it yourself: `--debug mylog.log`.
+It holds the tool version, the command, OS, the database server and extension versions, the settings
+(passwords masked), the full console output and whether the run finished or crashed. `--debug` never
+changes what is generated.
+
 ### Which command should I use day to day?
 
 `unitautogen --schema public --html report.html --out unit_tests` is the one to
