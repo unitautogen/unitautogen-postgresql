@@ -2,7 +2,7 @@
 
 All notable changes to UnitAutogen for PostgreSQL are recorded here. Versions follow the product's release tags.
 
-## 0.5.0
+## 0.5.0-beta
 
 - The config file, `unitautogen.toml` (or `--config FILE`): add or correct the PHI and personal-data tables and columns, and the audit tables, the tool detects, and state which audit table a table must log to. Reports mark everything taken from the file. See [docs/config-file.md](docs/config-file.md).
 - PHI recognised by column name: medical record numbers, health plan and insurance IDs, diagnosis and ICD codes, medication and prescriptions, lab results and other clinical data, provider IDs.
