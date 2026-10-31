@@ -20,8 +20,8 @@ set `UNITAUTOGEN_DSN` to the database you mean. See [Connecting](connecting.md).
 
 ### A paid command stopped with exit code 5 and generated nothing.
 
-It found no licence that covers that command. Put `unitautogen.lic` in the folder you run from, or set
-`UAG_LICENSE` to its path. `integration` needs Team; `seccover`, `pii` and `hipaa` need Enterprise.
+It found no licence that covers that command. Put `unitautogen.lic` in the folder you run from, or pass
+`--license PATH`. `integration` needs Team; `seccover`, `pii` and `hipaa` need Enterprise.
 
 ### A test was "pruned". Is that a failure?
 

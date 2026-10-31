@@ -55,5 +55,5 @@ With `--sec-gate`, when several findings apply, the highest code is returned.
 
 ## Licence file
 
-Paid commands find the licence on their own: `unitautogen.lic` in the folder you run from, or the file named
-by the `UAG_LICENSE` environment variable. `--license PATH` overrides both.
+Paid commands find `unitautogen.lic` in the folder you run from. To use a licence file somewhere else, pass
+`--license PATH`.
