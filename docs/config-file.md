@@ -40,11 +40,13 @@ not     = ["clinic.event_types"]
 | `[audit]` | Audit tables | HIPAA audit controls and integrity |
 | `[audit.map]` | Which audit table(s) a table must log to | HIPAA audit controls |
 
-Every section uses the same keys:
+The keys:
 
 - `tables` adds tables the tool missed.
-- `columns` adds columns the tool missed (`[phi]` and `[pii]`).
+- `columns` adds columns the tool missed (`[phi]` and `[pii]` only).
 - `not` removes a wrong guess. In `[phi]` and `[pii]` it can name a table or a column.
+
+`[audit]` takes only `tables` and `not`, plus its `[audit.map]` sub-table. An unknown key is an error.
 
 PHI counts as personal data, so a `[phi]` entry is also used by the PII-in-error check.
 
@@ -84,6 +86,6 @@ Reports always show which tables and columns came from the config file, not from
 
 ## Checks
 
-- A bad file stops the run with exit code 2 and names the line.
+- A bad file stops the run with exit code 2 and names the line. So does `--config` pointing at a file that does not exist.
 - A name not found in the database is a warning on the console and in the report, never silently ignored.
 - The run prints the file it used: `config: <path> (sha256 ...)`.

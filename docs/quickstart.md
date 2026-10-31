@@ -1,26 +1,28 @@
 # Quick start
 
-Generate unit tests and a coverage report for every function and trigger in the
-`public` schema. Generating unit tests is the **default action**, so
-you don't type a command word:
+> **Before you run:** point the tool at a disposable copy of your database, never production, with pgTAP and
+> plpgsql_check installed. See [Prerequisites](prerequisites.md) and [Connecting](connecting.md). On a
+> Supabase project, use [Supabase mode](supabase.md) instead.
+
+Generate unit tests and a coverage report for every function and trigger in the `public` schema. Generating
+unit tests is the **default action**, so you don't type a command word:
 
 ```
 unitautogen --schema public --out unit_tests --html report.html --json report.json
 ```
 
-**Windows and Linux - same commands.** The tool ships as one
-self-contained executable per platform, and every command, flag and report is identical on both. Only how you
-invoke the binary differs:
+**Windows and Linux - same commands.** The tool ships as one self-contained executable per platform, and every
+command, flag and report is identical on both. Only how you invoke the binary differs:
 
 | Platform | Invoke it as | Example |
 | --- | --- | --- |
 | Windows | `unitautogen.exe` (or just `unitautogen` if it is on your `PATH`) | `unitautogen.exe --schema public` |
-| Linux | `./unitautogen` (the ELF binary; add its folder to `PATH` to drop the `./`) | `./unitautogen --schema public` |
+| Linux | `./unitautogen` (add its folder to `PATH` to drop the `./`) | `./unitautogen --schema public` |
 
-Throughout this guide commands are written as `unitautogen …`; read that as
-`unitautogen.exe` on Windows and `./unitautogen` on Linux.
+Throughout these docs commands are written as `unitautogen …`; read that as `unitautogen.exe` on Windows and
+`./unitautogen` on Linux.
 
-You will see one line per routine and a summary. Real output from a sample database:
+You will see one line per routine, one line per trigger, and a summary. Real output from a sample database:
 
 ```
   public.account_health: 14 tests kept, branch 100% / stmt 100%  [test_account_health.sql]
@@ -38,12 +40,22 @@ You will see one line per routine and a summary. Real output from a sample datab
 == done: 72 tests across 6 routines, avg branch 100.0% -> unit_tests/ ==
 ```
 
-That single command produced 72 runnable pgTAP tests for the functions (one
-`test_<routine>.sql` file each in `unit_tests/`) plus
-behaviour tests for the 2 triggers (in `unit_tests/trigger_tests/`), an HTML report,
-and a JSON summary. (The "1 pruned → NT" notes are the guarantee at work - a test that wouldn't pass cleanly
-is dropped and the branch reported honestly, never faked.) Run the generated tests yourself at any time:
+That single command produced:
+
+- 72 runnable pgTAP tests for the functions, one `test_<routine>.sql` each in `unit_tests/unit/public/functions/`;
+- behaviour tests for the 2 triggers in `unit_tests/unit/public/triggers/`;
+- the HTML report and the JSON summary;
+- the CI report bundle (JUnit, Cobertura, LCOV) in `unit_tests/unit/`.
+
+A "1 pruned -> NT" note is the guarantee at work: a test that would not pass cleanly is dropped and the branch
+reported honestly, never faked.
+
+Run a generated suite yourself at any time - install the file, then run its schema:
 
 ```
+psql -d mydb -f unit_tests/unit/public/functions/test_transfer_funds.sql
 psql -d mydb -c "SELECT * FROM runtests('test_transfer_funds'::name);"
 ```
+
+Next: [the five commands](commands.md), [reading the report](reading-the-report.md), and running the tests in
+[CI](ci-cd.md).

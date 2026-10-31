@@ -31,7 +31,7 @@ RETURN NEXT is( (public.classify_amount((100)::numeric))::text,
                 'branch :: ELSIF p_amount < 100  =>  FALSE :: returns' );
 ```
 
-## 7.1 All tests pass on the correct code PASS
+## 1. All tests pass on the correct code (PASS)
 
 Running the generated suite against the routine as written:
 
@@ -49,7 +49,7 @@ result is `'large'`. The routine takes the ELSE branch for 100 and returns
 `'large'`, which matches the recorded expected value - so the assertion holds. Each
 passing line means "the routine still does, for this input, exactly what it did when the test was written."
 
-## 7.2 The same tests fail after a code change FAIL
+## 2. The same tests fail after a code change (FAIL)
 
 Now suppose a developer renames the middle tier - a one-line change, "small" becomes "reduced":
 
@@ -102,9 +102,9 @@ value changed fail, plus the rows-baseline check; every unaffected test stays gr
 the generator records the routine's current behaviour as the expected value and drops any test that will
 not pass cleanly. A failing test therefore never appears in a first run - it appears later, when your code
 changes in a way that alters behaviour a test had pinned. That is precisely what a regression test is for:
-the failure in §7.2 is the desired outcome of changing behaviour, not a defect in the tests.
+the failure in step 2 is the desired outcome of changing behaviour, not a defect in the tests.
 
-## 7.3 The same thing, guarding an AI change
+## 3. The same thing, guarding an AI change
 
 This is exactly how the tests guard AI-written code. Say you committed the generated `test_classify_amount.sql`, and later an AI assistant is asked to "tidy up the boundary checks". It makes a change that looks harmless:
 

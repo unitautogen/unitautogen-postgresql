@@ -26,13 +26,13 @@ RLS policy, before you tell me you are done:
 
 1. Apply the migration to the local database:  supabase db reset
 2. Run the committed guardrail tests first:
-     pg_prove -d "$DATABASE_URL" supabase/tests/pg/*.sql
+     supabase test db
 3. If a test fails and I did NOT ask for that behaviour to change, the
    code is wrong. Fix the code and re-run until every test passes.
    Never edit a test file to make it pass.
 4. If this is new logic that has no tests yet, or I confirmed the
    behaviour change was intended, (re)generate the tests:
-     unitautogen --schema public --out supabase/tests/pg --html report.html
+     unitautogen --supabase --schema public
    then run them once to confirm they pass, and commit the test files
    together with the migration.
 5. In your reply, tell me which tests you ran, the pass/fail count, and
@@ -52,8 +52,8 @@ Here is what a real session looks like. You type plain feature requests. The ass
 The assistant writes the function, applies the migration, and because there are no tests for it yet, generates and runs them:
 
 ```
-unitautogen --schema public --out supabase/tests/pg
-pg_prove -d "$DATABASE_URL" supabase/tests/pg/test_membership_tier.sql
+unitautogen --supabase --schema public
+supabase test db
 ```
 
 **Assistant:**
@@ -71,7 +71,7 @@ You did not run anything. The behaviour you just approved is now pinned.
 The assistant edits the function and, following the rule, runs the committed tests *first*, before it reports back. One fails:
 
 ```
-pg_prove -d "$DATABASE_URL" supabase/tests/pg/*.sql
+supabase test db
 not ok 4 - membership_tier :: p_points = 1000
     #   have: silver
     #   want: gold
@@ -103,7 +103,7 @@ That is the one judgement call in the loop, and the assistant makes it from your
 
 UnitAutogen needs a PostgreSQL that has your schema and both the pgTAP and plpgsql_check extensions. Point it at whichever database you can enable both on: your local Supabase database, a standard Postgres container in CI, or any dev database that mirrors your schema. The tests it produces are ordinary pgTAP, so they run anywhere pgTAP is installed.
 
-1. Install UnitAutogen. See [installation](installation.md).
+1. Install UnitAutogen. See [Install](../README.md#install).
 2. Bring up a database with your schema. For local Supabase:
    ```
    supabase start
@@ -115,7 +115,7 @@ UnitAutogen needs a PostgreSQL that has your schema and both the pgTAP and plpgs
    CREATE EXTENSION IF NOT EXISTS plpgsql_check;
    ```
    If a hosted provider does not offer one of them, generate and check against your local database or a CI Postgres instead, where both are available. See [prerequisites](prerequisites.md).
-4. Make the connection string available to the assistant's terminal as `DATABASE_URL`. For local Supabase, `supabase status` prints it (typically `postgresql://postgres:postgres@127.0.0.1:54322/postgres`). The rule uses `pg_prove`, which ships with pgTAP; if it is not installed, the tests also run with `psql -d "$DATABASE_URL" -c "SELECT * FROM runtests('test_<routine>'::name);"`.
+4. Nothing to configure for the connection. Run from the project root and `--supabase` finds the local database through `supabase status`, and writes the tests where `supabase test db` runs them. Unset any leftover `DATABASE_URL` in the assistant's terminal: it would replace the local database. See [Supabase mode](supabase.md).
 
 Once this is in place and the rule is in your rules file, the assistant handles the rest on every request.
 
