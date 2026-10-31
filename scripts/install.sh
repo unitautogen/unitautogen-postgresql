@@ -14,9 +14,9 @@ trap 'rm -rf "$tmp"' EXIT
 
 echo "Fetching the latest release of $REPO ..."
 api="$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest")"
-url="$(printf '%s' "$api"       | grep -o 'https://[^"]*linux-x64\.tar\.gz' | head -n1)"
+url="$(printf '%s' "$api"       | grep -o 'https://[^"]*/dist-Linux-[^"]*\.tar\.gz' | head -n1)"
 sums_url="$(printf '%s' "$api"  | grep -o 'https://[^"]*SHA256SUMS\.txt'    | head -n1)"
-[ -n "$url" ] || { echo "No linux-x64.tar.gz asset was found in the latest release." >&2; exit 1; }
+[ -n "$url" ] || { echo "No dist-Linux-<version>.tar.gz asset was found in the latest release." >&2; exit 1; }
 
 file="$(basename "$url")"
 echo "Downloading $file ..."

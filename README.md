@@ -3,7 +3,7 @@
 > Your application is tested. The logic inside your database usually is not.
 > UnitAutogen writes the tests for it.
 
-**Beta (v0.5.0-beta)** · PostgreSQL 14-18 · Windows and Linux · Community Edition (free), with Team and Enterprise modules on top.
+**Beta (v0.5.1-beta)** · PostgreSQL 14-18 · Windows and Linux · Community Edition (free), with Team and Enterprise modules on top.
 
 Your application has a test suite. The functions, procedures and triggers running *inside* your PostgreSQL database almost certainly do not, and it is not because your team is lazy. Testing database logic by hand means crafting seed data that forces each `IF`, `CASE`, `EXISTS` and exception path to run, one branch at a time. It is tedious enough that it rarely gets done, so the most critical logic you ship, the code closest to your data, goes out untested and breaks quietly: a wrong `WHERE`, a missing `INSERT`, a branch that never once executed.
 
@@ -78,8 +78,8 @@ Compliance officers and platform leads: [contact us](mailto:hello@unitautogen.co
 
 Download the build for your platform from the [Releases page](https://github.com/unitautogen/unitautogen-postgresql/releases), unzip it, and verify the checksum against `SHA256SUMS.txt`.
 
-- **Windows:** `unitautogen-pg-<version>-windows-x64.zip` contains `unitautogen.exe`. Put its folder on your `PATH`, or call it by full path.
-- **Linux:** `unitautogen-pg-<version>-linux-x64.tar.gz` contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`.
+- **Windows:** `dist-Windows-<version>.zip` contains `unitautogen.exe`. Put its folder on your `PATH`, or call it by full path.
+- **Linux:** `dist-Linux-<version>.tar.gz` contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`.
 
 Same commands, flags and reports on both platforms.
 
@@ -143,7 +143,7 @@ UnitAutogen runs entirely on your side. There is no telemetry and no phone-home;
 
 ## Status
 
-Active beta (v0.5.0-beta). The engine has been validated at high coverage across a range of real schemas, but you will surface things on production schemas nobody has run it against yet. Bug reports are the most valuable thing you can give us right now.
+Active beta (v0.5.1-beta). The engine has been validated at high coverage across a range of real schemas, but you will surface things on production schemas nobody has run it against yet. Bug reports are the most valuable thing you can give us right now.
 
 ## Support
 
