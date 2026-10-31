@@ -18,9 +18,9 @@ Write-Host "Fetching the latest release of $repo ..."
 $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/latest" `
     -Headers @{ 'User-Agent' = 'unitautogen-installer' }
 
-$asset = $rel.assets | Where-Object { $_.name -like '*windows-x64.zip' } | Select-Object -First 1
+$asset = $rel.assets | Where-Object { $_.name -like 'dist-Windows-*.zip' } | Select-Object -First 1
 $sums  = $rel.assets | Where-Object { $_.name -eq 'SHA256SUMS.txt' }      | Select-Object -First 1
-if (-not $asset) { throw 'No windows-x64.zip asset was found in the latest release.' }
+if (-not $asset) { throw 'No dist-Windows-<version>.zip asset was found in the latest release.' }
 
 $tmp = New-Item -ItemType Directory -Force -Path (Join-Path $env:TEMP ("uag_" + [guid]::NewGuid()))
 try {

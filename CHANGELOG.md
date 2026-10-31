@@ -2,6 +2,11 @@
 
 All notable changes to UnitAutogen for PostgreSQL are recorded here. Versions follow the product's release tags.
 
+## 0.5.1-beta
+
+- Wider PL/pgSQL coverage: queries that join three or more tables, outer joins (LEFT, RIGHT, FULL, NATURAL), loops over `ORDER BY` results, `ORDER BY` on text including `COLLATE "C"`, case-insensitive (nondeterministic) collations, nested array subscripts, `concat`, `concat_ws`, `format`, `num_nulls`, `array_to_string` on text arrays, and `WHILE` loops.
+- More accurate coverage: a branch that holds only `NULL;` counts as covered only when the run shows it executed. Otherwise it is reported as not covered, with the reason.
+- Test data fixes for functions that read the same table more than once, and for variables declared with a case-insensitive collation.
 ## 0.5.0-beta
 
 - The config file, `unitautogen.toml` (or `--config FILE`): add or correct the PHI and personal-data tables and columns, and the audit tables, the tool detects, and state which audit table a table must log to. Reports mark everything taken from the file. See [docs/config-file.md](docs/config-file.md).
