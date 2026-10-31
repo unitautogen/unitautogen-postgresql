@@ -46,7 +46,7 @@ With `--supabase`, every security command (`seccover`, `pii`, `hipaa`) also runs
 
 ## Watch out for a leftover connection string
 
-Any of `UNITAUTOGEN_DSN`, `TESTGEN_DSN`, `DATABASE_URL` or `PGHOST` in the environment replaces the
+Any of `UNITAUTOGEN_DSN`, `DATABASE_URL` or `PGHOST` in the environment replaces the
 `supabase status` database. Unset a leftover `DATABASE_URL` before a Supabase run.
 
 For using it as a guardrail for an AI editor working on your Supabase project, see

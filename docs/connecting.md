@@ -31,9 +31,8 @@ set UNITAUTOGEN_DSN=postgresql://postgres:********@127.0.0.1:5432/mydb_test
 ## Which setting wins
 
 1. `UNITAUTOGEN_DSN`.
-2. `TESTGEN_DSN`, the older name, still read.
-3. `DATABASE_URL`.
-4. The separate `PG*` variables, used only when no connection string is set.
+2. `DATABASE_URL`.
+3. The separate `PG*` variables, used only when no connection string is set.
 
 Check `DATABASE_URL` before you run. It often points at an application's real database. Point UnitAutogen at a
 test or disposable copy, or set `UNITAUTOGEN_DSN` to override it.
