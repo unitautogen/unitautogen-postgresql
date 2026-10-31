@@ -84,14 +84,26 @@ Compliance officers and platform leads: [contact us](mailto:hello@unitautogen.co
 
 ## Install
 
-Download the build for your platform from the [Releases page](https://github.com/unitautogen/unitautogen-postgresql/releases), unzip it, and verify the checksum against `SHA256SUMS.txt`.
+**Quick install** - downloads the newest release (pre-releases included), checks its SHA-256, and unpacks it:
+
+- **Linux** (into `~/.local/bin`):
+  ```
+  curl -fsSL https://raw.githubusercontent.com/unitautogen/unitautogen-postgresql/main/scripts/install.sh | bash
+  ```
+- **Windows** PowerShell (into `%USERPROFILE%\unitautogen`):
+  ```
+  irm https://raw.githubusercontent.com/unitautogen/unitautogen-postgresql/main/scripts/install.ps1 -OutFile install.ps1
+  powershell -ExecutionPolicy Bypass -File .\install.ps1
+  ```
+
+**Or by hand:** download the build for your platform from the [Releases page](https://github.com/unitautogen/unitautogen-postgresql/releases) (the newest one may be marked *Pre-release*), check it against `SHA256SUMS.txt` from the same release, and unzip it.
 
 - **Windows:** `dist-Windows-<version>.zip` contains `unitautogen.exe`. Put its folder on your `PATH`, or call it by full path.
-- **Linux:** `dist-Linux-<version>` (.tar.gz or .zip) contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`. Needs x86-64 with glibc 2.31 or newer (Debian 11+, Ubuntu 20.04+, RHEL / Rocky / AlmaLinux 8+); not arm64.
+- **Linux:** `dist-Linux-<version>.zip` contains the `unitautogen` binary. Run `chmod +x unitautogen` (a zip does not keep the exec bit) and put it on your `PATH`. Needs x86-64 with glibc 2.31 or newer (Debian 11+, Ubuntu 20.04+, RHEL / Rocky / AlmaLinux 8+); not arm64.
 
 Same commands, flags and reports on both platforms. Check it runs with `unitautogen --version`.
 
-> **Beta note (Windows):** the beta binary is not yet code-signed, so Windows SmartScreen may show an "unrecognized app" warning on first run. Choose "More info" then "Run anyway", or verify the SHA-256 checksum first if you prefer. Signing lands when the tool leaves beta.
+> **Beta note (Windows):** the beta binary is not yet code-signed, so Windows SmartScreen may show "Windows protected your PC" on first run. Choose "More info" then "Run anyway". To avoid the prompt, right-click the downloaded zip, choose Properties, tick **Unblock**, then extract it. The install script does this for you. Signing lands when the tool leaves beta.
 
 Extension setup for every platform, including managed/cloud PostgreSQL, is in [docs/prerequisites.md](docs/prerequisites.md).
 
