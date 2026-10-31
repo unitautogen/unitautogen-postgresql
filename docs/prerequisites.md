@@ -68,7 +68,7 @@ are skipped honestly (reported `NOT_TESTABLE`) rather than faked.
 - **Team** - needed for `integration`.
 - **Enterprise** - needed for `seccover`, `pii` and `hipaa`.
 
-Paid commands pick up the licence on their own: put `unitautogen.lic` in the folder you run from, or set
-`UAG_LICENSE` to the file's path (or pass `--license PATH`). A paid command run without its licence reports
+Paid commands pick up the licence on their own: put `unitautogen.lic` in the folder you run from, or pass
+`--license PATH`. A paid command run without its licence reports
 `NOT LICENSED`, generates nothing, and exits with code **5**. Editions and prices:
 [unitautogen.com/postgresql/pricing](https://unitautogen.com/postgresql/pricing/).
