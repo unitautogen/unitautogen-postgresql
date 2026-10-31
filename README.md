@@ -79,7 +79,7 @@ Compliance officers and platform leads: [contact us](mailto:hello@unitautogen.co
 Download the build for your platform from the [Releases page](https://github.com/unitautogen/unitautogen-postgresql/releases), unzip it, and verify the checksum against `SHA256SUMS.txt`.
 
 - **Windows:** `dist-Windows-<version>.zip` contains `unitautogen.exe`. Put its folder on your `PATH`, or call it by full path.
-- **Linux:** `dist-Linux-<version>.tar.gz` contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`.
+- **Linux:** `dist-Linux-<version>` (.tar.gz or .zip) contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`.
 
 Same commands, flags and reports on both platforms.
 
