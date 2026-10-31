@@ -41,8 +41,13 @@ try {
         Write-Warning "SHA256SUMS.txt not found in the release; skipping checksum verification."
     }
 
+    # The zip may hold the files at its root or inside a dist-Windows-<version> folder.
+    $x = Join-Path $tmp 'x'
+    Expand-Archive -Path $zip -DestinationPath $x -Force
+    $found = Get-ChildItem -Path $x -Recurse -Filter 'unitautogen.exe' | Select-Object -First 1
+    if (-not $found) { throw "unitautogen.exe not found in $($asset.name)" }
     New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-    Expand-Archive -Path $zip -DestinationPath $InstallDir -Force
+    Copy-Item -Path (Join-Path $found.DirectoryName '*') -Destination $InstallDir -Recurse -Force
 }
 finally {
     Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
