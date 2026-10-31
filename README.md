@@ -34,7 +34,7 @@ That is the guardrail. It pins today's behaviour as a test suite you did not hav
 
 Best of all, you can hand the whole loop to your AI assistant. Tell it once to use UnitAutogen as its guardrail, then just keep asking for features: it generates the tests, runs them on every change, and fixes what breaks before it ever shows you the code. See [how to set that up](docs/ai-guardrail.md), with the exact prompt and a real session, or the full [worked example](docs/worked-example.md).
 
-Unit testing is free and where most developers start. From there the tool climbs: **integration** testing across your functions, and **seccover**, a full security-coverage pass that checks whether your row-level security and multi-tenant isolation actually hold and whether personal data leaks through error messages. More on that below.
+Unit testing is free and where most developers start. From there the tool climbs: **integration** testing across your functions; **seccover**, a full security-coverage pass that checks whether your row-level security and multi-tenant isolation actually hold and whether personal data leaks through error messages; and **hipaa**, which turns that into stamped HIPAA evidence. More on that below.
 
 ## The one guarantee
 
@@ -49,7 +49,8 @@ UnitAutogen serves the whole path from writing database code to signing off on i
 | Unit + trigger testing | Developers | Community (free) | A full pgTAP test suite plus branch/statement coverage for every function and trigger, generated and run for you. |
 | Integration testing | Developers, QA | Team | Tests across your functions, run for real together, so interactions and cascades are exercised, not just units. |
 | seccover | Developers, QA, tech leads / CIO, compliance | Enterprise | Proof that RLS and multi-tenant isolation are actually enforced across your functions, views and triggers, unfiltered. |
-| PII audit (`--pii`) | Compliance, developers | Enterprise | Finds personal data leaking through error and `RAISE` messages. |
+| PII audit (`pii`) | Compliance, developers | Enterprise | Finds personal data leaking through error and `RAISE` messages. Runs inside seccover by default. |
+| HIPAA evidence (`hipaa`) | Compliance, auditors, tech leads | Enterprise | seccover plus an audit-log check, as one stamped report mapped to the HIPAA Security Rule. |
 
 The Community Edition, unit and trigger testing, is the everyday developer tool and is free forever. seccover is the one that platform leads, CIOs and compliance officers care about, and the one that carries the most value, so it gets its own section next.
 
@@ -57,7 +58,7 @@ The Community Edition, unit and trigger testing, is the everyday developer tool 
 
 Most PostgreSQL apps that hold more than one customer's data rely on row-level security and careful function logic to keep tenant A from ever seeing tenant B. The problem is that nobody can easily *prove* it stays true as the code keeps shipping. A single new function, a `SECURITY DEFINER` helper, a policy that was loosened for a bugfix, and the isolation quietly breaks. You find out in an incident, or an audit, not in a test.
 
-seccover is built for exactly that. It exercises your functions, views and triggers as different tenants and reports, per routine, whether isolation is **enforced** or **leaking**, with the evidence. `--pii` adds a second pass that catches personal data escaping through error and `RAISE` messages, the leak nobody writes a test for.
+seccover is built for exactly that. It exercises your functions, views, triggers, RLS policies and column grants as different tenants and reports, per object, whether isolation is **enforced** or **leaking**, with the evidence and a ranked list of the database changes that close each gap. Its PII audit catches personal data escaping through error and `RAISE` messages, the leak nobody writes a test for. How each verdict is proven: [How seccover proves its verdicts](docs/how-seccover-works.md).
 
 ![A UnitAutogen seccover security report](docs/img/img06.png)
 
@@ -67,7 +68,14 @@ Two things make it procurement-grade rather than a one-off script. It is **conti
 
 Because seccover emits standard pgTAP tests and dated, reproducible reports, its output doubles as evidence you can hand to an auditor. The isolation results map onto the controls that require you to prove data is reachable only by those authorized:
 
-- **HIPAA Security Rule, Access Control (45 CFR § 164.312(a)(1)):** per-routine evidence that electronic protected health information in a shared database is reachable only by the tenant it belongs to. Run continuously, it also supports the periodic technical Evaluation requirement (§ 164.308(a)(8)). The `--pii` pass supports the same minimum-necessary intent by catching PHI that escapes through error and `RAISE` messages.
+- **HIPAA Security Rule:** `unitautogen hipaa` runs seccover, adds an audit-log check, and writes one stamped report for the safeguards the database layer can evidence:
+  - **Access control (45 CFR § 164.312(a)(1)):** electronic protected health information in a shared database is reachable only by the tenant it belongs to.
+  - **Audit controls (§ 164.312(b)):** whether every data change is recorded, where, and with which values.
+  - **Integrity (§ 164.312(c)(1)):** whether a client role can forge, alter or erase the audit record.
+  - **Authentication (§ 164.312(d)):** what identity the row policies trust, and whether a client can claim another.
+  - **Evaluation (§ 164.308(a)(8)):** run on every deploy, the dated reports show the controls were evaluated over time.
+
+  The PII audit catches PHI escaping through error and `RAISE` messages. Encryption, transmission security, login verification and administrative safeguards are outside the database layer and stay with you. See [HIPAA evidence](docs/hipaa.md).
 - **SOC 2 (Trust Services Criteria):** logical access controls (CC6.1) and role-based, least-privilege access (CC6.3), plus the Confidentiality criteria (C1) where the data is sensitive. Because the scans run on every deploy, the reports show these controls operated across the audit period, not just that they were designed.
 
 This is supporting evidence for your auditors, not a certification, and it stays inside your perimeter: seccover is self-hosted, so the proof is produced on your own infrastructure.
@@ -79,13 +87,13 @@ Compliance officers and platform leads: [contact us](mailto:hello@unitautogen.co
 Download the build for your platform from the [Releases page](https://github.com/unitautogen/unitautogen-postgresql/releases), unzip it, and verify the checksum against `SHA256SUMS.txt`.
 
 - **Windows:** `dist-Windows-<version>.zip` contains `unitautogen.exe`. Put its folder on your `PATH`, or call it by full path.
-- **Linux:** `dist-Linux-<version>` (.tar.gz or .zip) contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`.
+- **Linux:** `dist-Linux-<version>` (.tar.gz or .zip) contains the `unitautogen` binary. `chmod +x unitautogen` and put it on your `PATH`. Needs x86-64 with glibc 2.31 or newer (Debian 11+, Ubuntu 20.04+, RHEL / Rocky / AlmaLinux 8+); not arm64.
 
-Same commands, flags and reports on both platforms.
+Same commands, flags and reports on both platforms. Check it runs with `unitautogen --version`.
 
 > **Beta note (Windows):** the beta binary is not yet code-signed, so Windows SmartScreen may show an "unrecognized app" warning on first run. Choose "More info" then "Run anyway", or verify the SHA-256 checksum first if you prefer. Signing lands when the tool leaves beta.
 
-Full options, including managed/cloud PostgreSQL and installing from source, are in [docs/installation.md](docs/installation.md) *(coming with the first release)* and [docs/prerequisites.md](docs/prerequisites.md).
+Extension setup for every platform, including managed/cloud PostgreSQL, is in [docs/prerequisites.md](docs/prerequisites.md).
 
 ## Prerequisites
 
@@ -94,7 +102,9 @@ Full options, including managed/cloud PostgreSQL and installing from source, are
   - [pgTAP](https://pgtap.org/) - the framework the generated tests are written in.
   - [plpgsql_check](https://github.com/okbob/plpgsql_check) - the coverage meter.
 
-Both are **required**. UnitAutogen checks for them first and stops with a clear message (exit code 3) naming the exact `CREATE EXTENSION` to run if either is missing, so you never get a half-finished run. It works with any PostgreSQL 14-18, self-hosted or managed, including Supabase, Neon, Amazon RDS and Aurora, and Azure Database for PostgreSQL. Setup for every platform is in [docs/prerequisites.md](docs/prerequisites.md).
+Point it at a **disposable copy** of your database, never production: it seeds rows and runs real statements, each rolled back.
+
+Both extensions are **required**. UnitAutogen checks for them first and stops with a clear message (exit code 3) naming the exact `CREATE EXTENSION` to run if either is missing, so you never get a half-finished run. It works with any PostgreSQL 14-18, self-hosted or managed, including Supabase, Neon, Amazon RDS and Aurora, and Azure Database for PostgreSQL. Setup for every platform is in [docs/prerequisites.md](docs/prerequisites.md).
 
 ## Quick start
 
@@ -104,11 +114,14 @@ Generating unit tests is the default action, so there is no command word:
 unitautogen --schema public --out unit_tests --html report.html --json report.json
 ```
 
-You get one `test_<routine>.sql` per function (plus behaviour tests for triggers) in `unit_tests/`, an HTML report, and a JSON summary. Run the generated tests yourself at any time:
+You get one `test_<routine>.sql` per function in `unit_tests/unit/public/functions/`, behaviour tests for triggers in `unit_tests/unit/public/triggers/`, an HTML report, a JSON summary, and the CI report bundle in `unit_tests/unit/`. Run a generated suite yourself at any time:
 
 ```
+psql -d mydb -f unit_tests/unit/public/functions/test_transfer_funds.sql
 psql -d mydb -c "SELECT * FROM runtests('test_transfer_funds'::name);"
 ```
+
+In a Supabase project, `unitautogen --supabase --schema public` writes the tests where `supabase test db` runs them. See [Supabase mode](docs/supabase.md).
 
 Walkthrough with real output: [docs/quickstart.md](docs/quickstart.md).
 
@@ -116,26 +129,29 @@ Walkthrough with real output: [docs/quickstart.md](docs/quickstart.md).
 
 | Document | What it covers |
 | --- | --- |
-| [Overview](docs/overview.md) | What the tool is and the four commands. |
+| [Overview](docs/overview.md) | What the tool is and the five commands. |
 | [Prerequisites](docs/prerequisites.md) | PostgreSQL version, pgTAP and plpgsql_check setup. |
 | [Connecting to your database](docs/connecting.md) | Connection options. |
 | [Quick start](docs/quickstart.md) | First run, end to end. |
-| [The four commands](docs/commands.md) | Unit, integration, seccover and PII, in full. |
+| [The five commands](docs/commands.md) | Unit, integration, seccover, pii and hipaa, in full. |
+| [Supabase mode](docs/supabase.md) | Running any command inside a Supabase project. |
+| [HIPAA evidence](docs/hipaa.md) | The `hipaa` command and its report, safeguard by safeguard. |
+| [How seccover proves its verdicts](docs/how-seccover-works.md) | How leaks are detected, in plain language. |
 | [Reading the report](docs/reading-the-report.md) | How to read coverage and verdicts. |
 | [Worked example](docs/worked-example.md) | A passing test and a failing test, up close. |
 | [AI guardrail (Supabase)](docs/ai-guardrail.md) | Using it as a guardrail for AI-written code, step by step. |
 | [The config file](docs/config-file.md) | Add or correct the PHI, personal-data and audit tables it detects. |
 | [CI/CD integration](docs/ci-cd.md) | Wiring it into your pipeline. |
-| [Command quick-reference](docs/command-reference.md) | Every command and flag. |
+| [Command quick-reference](docs/command-reference.md) | Every command, option and exit code. |
 | [FAQ and troubleshooting](docs/faq.md) | Common questions and fixes. |
 
 ## Editions and licensing
 
 - **Community Edition (free, forever):** unit and trigger test generation, coverage, and CI exit-code gating. This is the everyday developer tool.
 - **Team:** adds `integration`. For teams that need cross-function testing.
-- **Enterprise:** adds `seccover` and `--pii`, plus support and licensed, unwatermarked, audit-ready output. This is the tier for regulated and multi-tenant products.
+- **Enterprise:** adds `seccover`, `pii` and `hipaa`, plus support and licensed, unwatermarked, audit-ready output. This is the tier for regulated and multi-tenant products.
 
-For Team or Enterprise licensing, contact **<licensing@unitautogen.com>**. Use of the Software is governed by the [licence terms](EULA.md).
+Editions and prices: [unitautogen.com/postgresql/pricing](https://unitautogen.com/postgresql/pricing/). For Team or Enterprise licensing, contact **<licensing@unitautogen.com>**. Use of the Software is governed by the [licence terms](EULA.md).
 
 ## Privacy
 
@@ -153,6 +169,8 @@ Active beta (v0.5.1-beta). The engine has been validated at high coverage across
 - **Team / Enterprise licensing:** **<licensing@unitautogen.com>**.
 
 ## Related
+
+For Row-Level Security policies alone there is **rlsautotest**, a free, open-source (Apache-2.0) tool that generates a pgTAP suite proving, per table, command and identity, who can read and write which rows: [unitautogen/rlsautotest](https://github.com/unitautogen/rlsautotest) (`pip install rlsautotest`). seccover runs the same RLS policy tests as one of its checks.
 
 UnitAutogen also has a SQL Server edition (built on tSQLt): [unitautogen/unitautogen-public-repo](https://github.com/unitautogen/unitautogen-public-repo). One brand, two database platforms. Learn more at [unitautogen.com](https://unitautogen.com).
 
